@@ -22,5 +22,5 @@ export class Pokemon extends Document {
   no: number;
 }
 
-//Exportamos el esquma
+//Exportamos el esquema
 export const PokemonSchema = SchemaFactory.createForClass(Pokemon);

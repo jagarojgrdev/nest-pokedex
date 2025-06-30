@@ -7,11 +7,15 @@ import { CommonModule } from './common/common.module';
 import { SeedModule } from './seed/seed.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
+import { JoiValidationSchema } from './config/validation';
 @Module({
   imports: [
     //Añadimos para hacer uso variables de entorno, tenemos que instalar paquete config
     ConfigModule.forRoot({
+      //Cargamos la configuración de las envs config/validation
       load: [configuration],
+      //Cargamos la validación de las envs config/configuration
+      validationSchema: JoiValidationSchema,
     }),
     // Se usa para servir contenido estatico, tenemos que instalar el paquete serve-static
     ServeStaticModule.forRoot({
@@ -20,8 +24,9 @@ import configuration from './config/configuration';
 
     // Conexión con Mongo , tenemos que instalar el paquete antes
     MongooseModule.forRoot(
-      //NO ES ASÍ YA QUE NO SE DEBE DE CARGAR AQUI LA URL
-      process.env.MONGODB || 'mongodb://localhost:27017/pokedex',
+      //Asignamos un nombre a la DB
+      process.env.DATABASE_HOST ?? 'mongodb://localhost:27017/pokedex',
+      { dbName: 'pokemonsdb' },
     ),
 
     PokemonModule,

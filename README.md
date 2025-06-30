@@ -13,7 +13,10 @@ npm run install
 ```
 docker-compose up -d
 ```
-
+4. Reconstruir DB con Seed
+```
+http://localhost:3000/api/v1/seed/
+```
 ## Stack empleado
 ### DB
 * MongoDB

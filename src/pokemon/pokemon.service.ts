@@ -9,15 +9,22 @@ import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { isValidObjectId, Model } from 'mongoose';
 import { Pokemon } from './entities/pokemon.entity';
 import { InjectModel } from '@nestjs/mongoose';
-import { MongoError } from 'src/common/interfaces/mongo-error/mongo-error.interface';
+import { MongoError } from 'src/common/interfaces/mongo-error.interface';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PokemonService {
+  private defaultLimit: number;
+
   //Lo usamos para guardar en la DB
   constructor(
     @InjectModel(Pokemon.name)
     private readonly pokemonModel: Model<Pokemon>,
-  ) {}
+    private readonly configService: ConfigService,
+  ) {
+    this.defaultLimit = this.configService.get<number>('defaultLimit') ?? 10;
+  }
 
   //Debe de ser asincrono
   async create(createPokemonDto: CreatePokemonDto) {
@@ -29,8 +36,22 @@ export class PokemonService {
     }
   }
 
-  findAll() {
-    return `This action returns all pokemon`;
+  findAll(paginationDto: PaginationDto) {
+    //Indicamos por defecto que limit sea 10 y offset 0
+    const { limit = this.defaultLimit, offset = 0 } = paginationDto;
+
+    return (
+      this.pokemonModel
+        .find()
+        //Es un ejemplo con poco lógica real
+        .limit(limit)
+        .skip(offset)
+        .sort({
+          no: 1,
+        })
+        // Elimina de la respuesta este campo
+        .select('-__v')
+    );
   }
 
   //TODO LO QUE SEA UN CONEXION A LA BASE DE DATOS DEBE DE SER ASINCRONO

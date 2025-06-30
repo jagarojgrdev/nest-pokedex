@@ -3,8 +3,6 @@
 /node_modules
 /build
 
-/mongo
-
 # Logs
 logs
 *.log
@@ -56,3 +54,9 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# ¡NUEVO!
+# Folder y ficheros de DB
+/mongo
+
+.env
